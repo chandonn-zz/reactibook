@@ -1,0 +1,17 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ],
+  "jsRules": {},
+  "rules": {
+    "radix": false,
+    "member-access": false,
+    "interface-name": false
+  },
+  "rulesDirectory": [],
+  "exclude": [
+    "./__tests__"
+  ]
+}
