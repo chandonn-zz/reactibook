@@ -1,15 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './mainscreen.css';
 
 interface Props {
-
+	user: any;
 }
 
 interface State {
 
 }
 
-export default class MainScreen extends React.Component<Props, State> {
+class MainScreen extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 	}
@@ -22,3 +23,7 @@ export default class MainScreen extends React.Component<Props, State> {
 		)
 	}
 }
+
+const mapToProps = ({ user }: Props) => ({ user });
+
+export default connect(mapToProps)(MainScreen);
