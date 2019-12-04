@@ -1,22 +1,12 @@
 import { SET_USER } from '../Actions/types';
+import { StoreTypes } from '../Store';
 
-interface User {
-	user: any;
-}
+const initialState: StoreTypes['user'] | null = null;
 
-interface Action {
-	type: string;
-	payload: User;
-}
-
-const initialState: User = {
-	user: null
-}
-
-export const userReducer = (state: User = initialState, action: Action) => {
+export const userReducer = (state: StoreTypes['user'] | null = initialState, action: StoreTypes['action']) => {
 	switch(action.type) {
 		case SET_USER: {
-			return {...state, user: action.payload}
+			return action.payload;
 		}
 		default: return state;
 	}

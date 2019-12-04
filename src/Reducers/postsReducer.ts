@@ -4,38 +4,22 @@ import {
 	UPDATE_POST,
 	DELETE_POST,
 } from '../Actions/types';
-
-interface Post {
-	title: string;
-	content: string;
-};
-
-interface Posts {
-	posts: Post[];
-}
+import { Post } from '../Store';
 
 interface Action {
 	type: string;
-	payload: Posts | Post;
+	payload: Post[] | Post;
 }
 
-const initialState: Posts = {
-	posts: []
-}
+const initialState: Post[] = [];
 
-export const postsReducer = (state: Posts = initialState, action: Action) => {
+export const postsReducer = (state: Post[] = initialState, action: Action) => {
 	switch(action.type) {
 		case GET_POSTS:
+		case CREATE_POST:
+		case UPDATE_POST:
 		case DELETE_POST: {
-			return {...state, posts: action.payload}
-			break;
-		}
-		case CREATE_POST: {
-			return {...state, posts: [...state.posts, action.payload]}
-			break;
-		}
-		case UPDATE_POST: {
-			return {...state, posts: [...state.posts, action.payload]}
+			return action.payload
 			break;
 		}
 		default: return state;

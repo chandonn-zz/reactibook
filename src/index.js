@@ -5,6 +5,7 @@ import Main from './Views';
 import { Provider } from 'react-redux';
 import { Store } from './Store';
 import * as serviceWorker from './serviceWorker';
+import firebase from './firebase';
 
 ReactDOM.render(
 	<Provider store={Store}>
