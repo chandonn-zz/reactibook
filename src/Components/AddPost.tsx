@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StoreTypes } from '../Store';
 import { createPost } from '../Actions';
+import './components.css';
 
 interface Props {
 	createPost: (post: StoreTypes['post']) => void;
 }
 
 interface State {
-	title: string;
+	friends: boolean;
 	content: string;
 	phrase: string;
 }
@@ -37,7 +38,7 @@ class AddPost extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			title: '',
+			friends: false,
 			content: '',
 			phrase: getPhrase()
 		}
@@ -45,46 +46,44 @@ class AddPost extends Component<Props, State> {
 
 	addNewPost() {
 		const {
-			title,
+			friends,
 			content,
 		} = this.state;
 
-		if (title.length < 1) {
-			alert('Give your post a title');
-			return;
-		}
-
 		if (content.length < 1) {
-			alert('Whats the content');
+			alert('Whats the content?');
 			return;
 		}
 
 		try {
-			this.props.createPost({ title, content, id: 0, owner: true });
+			this.props.createPost({ content, id: 0, owner: true, friends });
 		} catch(e) {
 			alert('There was an error, please try again');
 			return;
 		}
 
-		this.setState({ phrase: getPhrase(), title: '', content: '' });
+		this.setState({ phrase: getPhrase(), content: '', friends: false });
 	}
 
 	render() {
-		const { title, content, phrase } = this.state;
+		const { content, phrase } = this.state;
 
 		return (
-			<div>
-				<p>{phrase}</p>
-				<input type="text" value={title} onChange={(event) => this.setState({ title: event.target.value })} />
+			<div className="card post">
 				<textarea
+					placeholder={phrase}
+					className="form-control"
 					value={content}
 					onChange={(event) => this.setState({ content: event.target.value })}
-					rows={5} cols={30}
+					rows={2} cols={30}
 				/>
 
-				<div>
-					<button onClick={() => this.addNewPost()}>
-						<p>Post it</p>
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10 }}>
+					<div>
+						<span className="post-meta">visibility</span>
+					</div>
+					<button className="btn btn-outline-primary" onClick={() => this.addNewPost()}>
+						<span style={{ fontSize: 12 }}>Post</span>
 					</button>
 				</div>
 			</div>

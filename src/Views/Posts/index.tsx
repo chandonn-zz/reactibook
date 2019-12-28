@@ -5,7 +5,9 @@ import { StoreTypes } from '../../Store';
 import { getPosts, logOut } from '../../Actions';
 import Post from '../../Components/Post';
 import AddPost from '../../Components/AddPost';
+import SearchBar from '../../Components/searchBar';
 import firebase from '../../firebase';
+import './posts.css';
 
 interface Props {
 	user: StoreTypes['user'];
@@ -50,20 +52,24 @@ class PostsPage extends Component<Props> {
 
 		return (
 			<div>
-				<p>Página de posts</p>
-				{posts.map(post => (
-					<Post key={post.id} post={post} />
-				))}
+				<SearchBar />
+				<div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 60 }}>
+					<div className="feed">
+						<AddPost />
 
-				<AddPost />
+						{posts.map(post => (
+							<Post key={post.id} post={post} />
+						))}
 
-				{user ?
-					(<div>
-						<button onClick={() => this.logOutUser()}>
-							<p>Log out</p>
-						</button>
-					</div>)
-				: null}
+						{user ?
+							(<div>
+								<button onClick={() => this.logOutUser()}>
+									<p>Log out</p>
+								</button>
+							</div>)
+						: null}
+					</div>
+				</div>
 			</div>
 		)
 	}

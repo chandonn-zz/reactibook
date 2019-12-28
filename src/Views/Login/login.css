@@ -1,0 +1,15 @@
+.login-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	align-items: center;
+	padding-top: 10%;
+}
+
+.login-method {
+	margin-bottom: 20px;
+}
+
+.login-field {
+	padding: 5px 0px;
+}

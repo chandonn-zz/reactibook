@@ -8,7 +8,7 @@ import { Post } from '../Store';
 
 interface Action {
 	type: string;
-	payload: Post[] | Post;
+	payload: Post[];
 }
 
 const initialState: Post[] = [];
@@ -19,7 +19,7 @@ export const postsReducer = (state: Post[] = initialState, action: Action) => {
 		case CREATE_POST:
 		case UPDATE_POST:
 		case DELETE_POST: {
-			return action.payload
+			return action.payload.sort((a, b) => b.id - a.id)
 			break;
 		}
 		default: return state;

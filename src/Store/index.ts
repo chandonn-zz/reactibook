@@ -15,9 +15,9 @@ export interface Action {
 
 export interface Post {
 	id: number;
-	title: string;
 	content: string;
 	owner: boolean;
+	friends: boolean;
 }
 
 export interface StoreTypes {

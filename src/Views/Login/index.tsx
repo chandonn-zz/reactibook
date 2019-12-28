@@ -6,12 +6,14 @@ import {
 	black
 } from '../../Resources/colors';
 import firebase from '../../firebase';
+import './login.css';
 
 interface Props {
 
 }
 
 interface State {
+	name: string;
 	mail: string;
 	password: string;
 	passwordConfirmation: string;
@@ -46,7 +48,8 @@ const errorCodes: any = {
 	'auth/email-already-in-use': 'This email has an account, please login with it',
 	'login-error': 'There was an error, please try again',
 	'no-credentials': 'Please, login to an existing account',
-	'auth/wrong-password': 'Wrong password'
+	'auth/wrong-password': 'Wrong password',
+	'auth/user-not-found': 'No account found for this email, please create one'
 }
 
 class LoginPage extends Component<Props, State> {
@@ -54,6 +57,7 @@ class LoginPage extends Component<Props, State> {
 		super(props);
 
 		this.state = {
+			name: '',
 			mail: '',
 			password: '',
 			passwordConfirmation: '',
@@ -146,16 +150,22 @@ class LoginPage extends Component<Props, State> {
 		return;
 	}
 
-	googleLogin() {
+	async googleLogin() {
+		const provider = new firebase.auth.GoogleAuthProvider();
+		firebase.auth().languageCode = 'pt';
 
-	}
+		firebase.auth().signInWithPopup(provider).then(result => {
+			const user = result.user;
 
-	googleSignin() {
-
+			console.log(user);
+		}).catch(error => {
+			console.log(error)
+		})
 	}
 
 	render() {
 		const {
+			name,
 			mail,
 			password,
 			passwordConfirmation,
@@ -168,118 +178,134 @@ class LoginPage extends Component<Props, State> {
 		} = this.state;
 
 		return (
-			<div className="main-container">
-				<h3>Reactibook</h3>
-				<h5>Bem vindo ao mural de posts do Laboratoria</h5>
-				<h5>Faça login para aproveitar</h5>
+			<div className="login-container">
+				<h2 style={{ marginBottom: 40 }}>Reactibook</h2>
 
-				<div className="login-container">
-					<div className="login-method">
-						<button onClick={() => this.setState({ type: 'login' })}>
-							<p>Login</p>
-						</button>
-						<button onClick={() => this.setState({ type: 'register' })}>
-							<p>Criar conta</p>
-						</button>
-					</div>
-					{type === 'login' ?
-						(<div>
-							<p>Entre com e-mail e senha</p>
-							<div>
-								<input
-									style={{
-										border: errorMail.length > 0 ? 'red' : 'transparent'
-									}}
-									className="input-login"
-									type="text"
-									value={mail}
-									onChange={(event) => this.updateMail(event.target.value)}
-									placeholder="Email"
-								/>
-								<ErrorMessage text={errorMail} />
-							</div>
-							<div>
-								<input
-									style={{
-										border: errorPass.length > 0 ? 'red' : 'transparent'
-									}}
-									className="input-login"
-									type="password"
-									value={password}
-									onChange={(event) => this.updatePassword(event.target.value)}
-									placeholder="Senha"
-								/>
-								<ErrorMessage text={errorPass} />
-							</div>
-							<div>
-								<button className="social-login" style={{ backgroundColor: pink }} onClick={() => this.emailLogin()}>
-									<p style={{ color: '#fff', fontWeight: 'bold' }}>Login</p>
-								</button>
-								<button className="social-login" style={{ backgroundColor: google }} onClick={() => this.googleLogin()}>
-									<p style={{ color: '#fff', fontWeight: 'bold' }}>Google</p>
-								</button>
-							</div>
-							<div>
-								<ErrorMessage text={errorCodeLogin} />
-							</div>
-						</div>)
-						:
-						(<div>
-							<p>Crie sua conta</p>
-							<div>
-								<input
-									style={{
-										border: errorMail.length > 0 ? 'red' : 'transparent'
-									}}
-									className="input-login"
-									type="text"
-									value={mail}
-									onChange={(event) => this.updateMail(event.target.value)}
-									placeholder="Email"
-								/>
-								<ErrorMessage text={errorMail} />
-							</div>
-							<div>
-								<input
-									style={{
-										border: errorPass.length > 0 ? 'red' : 'transparent'
-									}}
-									className="input-login"
-									type="password"
-									value={password}
-									onChange={(event) => this.updatePassword(event.target.value)}
-									placeholder="Senha"
-								/>
-								<ErrorMessage text={errorPass} />
-							</div>
-							<div>
-								<input
-									style={{
-										border: errorPassConfirm.length > 0 ? 'red' : 'transparent'
-									}}
-									className="input-login"
-									type="password"
-									value={passwordConfirmation}
-									onChange={(event) => this.updatePasswordConfirmation(event.target.value)}
-									placeholder="Confirme sua senha"
-								/>
-								<ErrorMessage text={errorPassConfirm} />
-							</div>
-							<div>
-								<button className="social-login" style={{ backgroundColor: pink }} onClick={() => this.emailSignin()}>
-									<p style={{ color: '#fff', fontWeight: 'bold' }}>Signin</p>
-								</button>
-								<button className="social-login" style={{ backgroundColor: google }} onClick={() => this.googleSignin()}>
-									<p style={{ color: '#fff', fontWeight: 'bold' }}>Google</p>
-								</button>
-							</div>
-							<div>
-								<ErrorMessage text={errorCodeCreate} />
-							</div>
-						</div>)
-					}
-
+				<div className="login-method">
+					<button
+						className="btn"
+						style={{ borderColor: type === 'login' ? pink : 'transparent', borderWidth: 1 }}
+						onClick={() => this.setState({ type: 'login' })}
+					>
+						<span>Login</span>
+					</button>
+					<button
+						className="btn"
+						style={{ borderColor: type === 'register' ? pink : 'transparent', borderWidth: 1 }}
+						onClick={() => this.setState({ type: 'register' })}
+					>
+						<span>Create account</span>
+					</button>
 				</div>
+				{type === 'login' ?
+					(<div>
+						<p>Login with e-mail and password</p>
+						<div className="login-field">
+							<input
+								style={{
+									border: errorMail.length > 0 ? 'red' : 'transparent',
+									marginTop: 5,
+									marginBottom: 5,
+								}}
+								className="form-control"
+								type="email"
+								value={mail}
+								onChange={(event) => this.updateMail(event.target.value)}
+								placeholder="Email"
+							/>
+							<ErrorMessage text={errorMail} />
+						</div>
+						<div className="login-field">
+							<input
+								style={{
+									border: errorPass.length > 0 ? 'red' : 'transparent'
+								}}
+								className="form-control"
+								type="password"
+								value={password}
+								onChange={(event) => this.updatePassword(event.target.value)}
+								placeholder="Senha"
+							/>
+							<ErrorMessage text={errorPass} />
+						</div>
+						<div style={{ display: 'flex', marginTop: 10, justifyContent: 'space-between' }}>
+							<button className="btn" style={{ backgroundColor: pink, width: '40%' }} onClick={() => this.emailLogin()}>
+								<span style={{ color: '#fff', fontWeight: 'bold' }}>Login</span>
+							</button>
+							<button className="btn" style={{ backgroundColor: google, width: '40%' }} onClick={() => this.googleLogin()}>
+								<span style={{ color: '#fff', fontWeight: 'bold' }}>Google</span>
+							</button>
+						</div>
+						<div>
+							<ErrorMessage text={errorCodeLogin} />
+						</div>
+					</div>)
+					:
+					(<div>
+						<p>Create account with e-mail and password</p>
+						<div className="login-field">
+							<input
+								className="form-control"
+								type="text"
+								value={name}
+								onChange={(event) => this.setState({ name: event.target.value})}
+								placeholder="Name"
+							/>
+							<ErrorMessage text={errorMail} />
+						</div>
+						<div className="login-field">
+							<input
+								style={{
+									border: errorMail.length > 0 ? 'red' : 'transparent'
+								}}
+								className="form-control"
+								type="email"
+								value={mail}
+								onChange={(event) => this.updateMail(event.target.value)}
+								placeholder="Email"
+							/>
+							<ErrorMessage text={errorMail} />
+						</div>
+						<div className="login-field">
+							<input
+								style={{
+									border: errorPass.length > 0 ? 'red' : 'transparent',
+								}}
+								className="form-control"
+								type="password"
+								value={password}
+								onChange={(event) => this.updatePassword(event.target.value)}
+								placeholder="Senha"
+							/>
+							<ErrorMessage text={errorPass} />
+						</div>
+						<div className="login-field">
+							<input
+								style={{
+									border: errorPassConfirm.length > 0 ? 'red' : 'transparent'
+								}}
+								className="form-control"
+								type="password"
+								value={passwordConfirmation}
+								onChange={(event) => this.updatePasswordConfirmation(event.target.value)}
+								placeholder="Confirme sua senha"
+							/>
+							<ErrorMessage text={errorPassConfirm} />
+						</div>
+						<div style={{ display: 'flex', marginTop: 10, justifyContent: 'space-between' }}>
+							<button className="btn" style={{ backgroundColor: pink, width: '40%' }} onClick={() => this.emailSignin()}>
+								<span style={{ color: '#fff', fontWeight: 'bold' }}>Signin</span>
+							</button>
+							<button className="btn" style={{ backgroundColor: google, width: '40%' }} onClick={() => this.googleLogin()}>
+								<span style={{ color: '#fff', fontWeight: 'bold' }}>Google</span>
+							</button>
+						</div>
+						<div>
+							<ErrorMessage text={errorCodeCreate} />
+						</div>
+					</div>)
+				}
+
 			</div>
 		)
 	}

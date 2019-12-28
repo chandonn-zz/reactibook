@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './home.css';
+import {
+	pink
+} from '../../Resources/colors';
 
 export default class Home extends Component {
 
 	render() {
 		return (
 			<div className="container home-container">
-				<h2>Wellcome to Reactibook</h2>
-				<h5>En asociación con Laboratoria</h5>
+				<h1>Wellcome to Reactibook</h1>
+				<h5 style={{ color: pink }}>Hecho por Alexandre en asociación con Laboratoria</h5>
 
-				<p>Login to your account to use it</p>
-				<Link to="/login">Login page</Link>
+				<p>Login to your account and use it</p>
+
+				<Link className="btn btn-outline-dark" to="/login">Login page</Link>
 			</div>
 		)
 	}

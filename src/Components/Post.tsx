@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StoreTypes } from '../Store';
 import { updatePost, deletePost } from '../Actions';
+import './components.css';
 
 interface Props {
 	post: StoreTypes['post'];
@@ -11,7 +12,7 @@ interface Props {
 
 interface State {
 	edit: boolean;
-	title: string;
+	friends: boolean;
 	content: string;
 }
 
@@ -21,22 +22,17 @@ class Post extends Component<Props, State> {
 
 		this.state = {
 			edit: false,
-			title: this.props.post.title,
 			content: this.props.post.content,
+			friends: this.props.post.friends,
 		}
 	}
 
 	savePost() {
 		const {
-			title,
+			friends,
 			content
 		} = this.state;
 		const { post: { id, owner } } = this.props;
-
-		if (title.length < 1) {
-			alert('Give your post a title');
-			return;
-		}
 
 		if (content.length < 1) {
 			alert('Give your post a content');
@@ -44,7 +40,7 @@ class Post extends Component<Props, State> {
 		}
 
 		try {
-			this.props.updatePost({ title, content, id, owner });
+			this.props.updatePost({ content, id, owner, friends });
 		} catch(e) {
 			console.log(e)
 			alert('There was an error, try again');
@@ -59,42 +55,50 @@ class Post extends Component<Props, State> {
 
 	render() {
 		const { post } = this.props;
-		const { edit, title, content } = this.state;
+		const { edit, content, friends } = this.state;
 
 		if (this.state.edit) {
 			return (
-				<div>
-					<input type="text" value={title} onChange={(event) => this.setState({ title: event.target.value })} />
+				<div className="card post">
 					<textarea
+						className="form-control"
 						value={content}
 						onChange={(event) => this.setState({ content: event.target.value })}
-						rows={5} cols={30}
+						rows={2} cols={30}
 					/>
 
 					<div>
-						<button onClick={() => this.setState({ edit: false })}>
-							<p>Cancelar</p>
-						</button>
-						<button onClick={() => this.savePost()}>
-							<p>Salvar</p>
-						</button>
+						<div>
+							{friends ? 'so para amigos' : 'publico'}
+						</div>
+						<div>
+							<button className="btn" onClick={() => this.setState({ edit: false })}>
+								<p>Cancelar</p>
+							</button>
+							<button className="btn" onClick={() => this.savePost()}>
+								<p>Salvar</p>
+							</button>
+						</div>
 					</div>
 				</div>
 			)
 		}
 
 		return (
-			<div>
-				<p>{post.title}</p>
-				<p>{post.content}</p>
-				<p>{post.id}</p>
-				<div>
-					<button className="btn" onClick={() => this.excludePost()}>
-						<p>Delete</p>
-					</button>
-					<button className="btn" onClick={() => this.setState({ edit: true })}>
-						<p>Edit</p>
-					</button>
+			<div className="card post">
+				<span className="post-content">{post.content}</span>
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+					<div>
+						<span className="post-meta">{post.friends ? 'Friends' : 'Public'}</span>
+					</div>	
+					<div>
+						<button className="btn btn-outline-dark" onClick={() => this.excludePost()}>
+							<span style={{ fontSize: 12 }}>Delete</span>
+						</button>
+						<button style={{ marginLeft: 10 }} className="btn btn-outline-dark" onClick={() => this.setState({ edit: true })}>
+							<span style={{ fontSize: 12 }}>Edit</span>
+						</button>
+					</div>
 				</div>
 			</div>
 		)

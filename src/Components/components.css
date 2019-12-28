@@ -1,0 +1,13 @@
+.post {
+	padding: 5px;
+	margin: 10px 0;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.post-content {
+	font-size: 14px;
+}
+
+.post-meta {
+	font-size: 12px;
+}
